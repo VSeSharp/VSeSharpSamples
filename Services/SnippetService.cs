@@ -1,15 +1,13 @@
-﻿
+﻿using Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Samples;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static ConsoleUI.Program;
 
 //DI, Logging: Serilog, Settings
 
-namespace ConsoleUI
+namespace Services
 {
     public class SnippetService : ISnippetService
     {

@@ -1,4 +1,4 @@
-﻿namespace ConsoleUI
+﻿namespace Services
 {
     public interface ISnippetService
     {

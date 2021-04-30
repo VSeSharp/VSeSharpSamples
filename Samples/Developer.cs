@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Samples
+namespace Domain
 {
     public class Developer
     {

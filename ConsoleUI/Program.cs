@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Services;
 using System;
 using System.IO;
 
@@ -12,8 +13,6 @@ namespace ConsoleUI
 {
     class Program
     {
-        public abstract record Person(string FirstName, string LastName);
-        public record Teacher(string FirstName, string LastName, int Grade);
         static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder();

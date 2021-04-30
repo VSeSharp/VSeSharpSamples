@@ -1,4 +1,4 @@
-﻿namespace Samples
+﻿namespace Domain
 {
     public class ProgrammingLanguage
     {
