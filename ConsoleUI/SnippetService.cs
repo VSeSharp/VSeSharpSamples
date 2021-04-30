@@ -1,15 +1,29 @@
-﻿using Samples;
+﻿
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Samples;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static ConsoleUI.Program;
 
-namespace VSeSharpSamplesExplorer
+//DI, Logging: Serilog, Settings
+
+namespace ConsoleUI
 {
-    class Program
+    public class SnippetService : ISnippetService
     {
-        public abstract record Person(string FirstName, string LastName);
-        public record Teacher(string FirstName, string LastName, int Grade);
-        static void Main(string[] args)
+        private readonly ILogger<SnippetService> _log;
+        private readonly IConfiguration _config;
+        public SnippetService(ILogger<SnippetService> log, IConfiguration config)
+        {
+            _log = log;
+            _config = config;
+        }
+
+        public ILogger<SnippetService> Log { get; }
+
+        public void Run()
         {
             //.SelectMany() clause in Language Integrated Query (LINQ)
             OneToManyRelationship();
@@ -19,7 +33,6 @@ namespace VSeSharpSamplesExplorer
             FuncDelegateToANonStaticMethod();
             //using the Func<TResult> delegate with anonymous methods  
             FuncDelegateWithAnonymousMethods();
-
             List<int> ages = new List<int> { 21, 46, 46, 46, 56, 55, 17, 21, 55, 55, 55 };
             //.Distinct() in Language Integrated Query (LINQ)
             LINQDistinc(ages);
@@ -29,11 +42,9 @@ namespace VSeSharpSamplesExplorer
             RecordType();
             //what type will the compiler conclude lengths to be? - IEnumerable<int>
             LINQIEnumerable();
-
-            Console.ReadKey();
         }
 
-        static void OneToManyRelationship()
+        private void OneToManyRelationship()
         {
             Developer[] devs = {
                 new Developer {
@@ -73,11 +84,9 @@ namespace VSeSharpSamplesExplorer
                         Language = devpl.pl.Name
                     }
             );
-
-            ConsoleUtilities.Print(query);
         }
         //Once the enumeration is complete, the message in the finally{} block will be written to the console
-        static IEnumerable<string> FinallyBlock()
+        private IEnumerable<string> FinallyBlock()
         {
             try
             {
@@ -87,44 +96,38 @@ namespace VSeSharpSamplesExplorer
             }
             finally
             {
-                ConsoleUtilities.Print("In finally block!");
+                _log.LogInformation("finally clause");
             }
         }
-        static void FuncDelegateWithAnonymousMethods()
+        private void FuncDelegateWithAnonymousMethods()
         {
             Developer developer = new Developer() { FirstName = "VSeSharp" };
             Func<string> introduceMethodCall = delegate () { return developer.IntroduceDeveloper(); };
-            ConsoleUtilities.Print(introduceMethodCall());
         }
-        static void FuncDelegateToANonStaticMethod()
+        private void FuncDelegateToANonStaticMethod()
         {
             Developer developer = new Developer() { FirstName = "VSeSharp" };
             Func<string> introduceMethodCall = developer.IntroduceDeveloper;
-            ConsoleUtilities.Print(introduceMethodCall());
         }
-        static void LINQDistinc(List<int> ages)
+        private void LINQDistinc(List<int> ages)
         {
             var distinctAges = ages.Distinct();
-            ConsoleUtilities.Print(distinctAges);
         }
-        static void LINQAverage(List<int> ages)
+        private void LINQAverage(List<int> ages)
         {
             double average = ages.Distinct().Average();
-            ConsoleUtilities.Print(average);
         }
         //https://docs.microsoft.com/en-us/dotnet/csharp/whats-new/csharp-9
-        static void RecordType()
+        private void RecordType()
         {
             Teacher teacher = new("Nancy", "Davolio", 5);
-            Console.WriteLine(teacher);
-            ConsoleUtilities.PrintLine();
+            _log.LogInformation("Teacher {teacher}", teacher);
         }
-        static void LINQIEnumerable()
+        private void LINQIEnumerable()
         {
             string[] names = { "C#", "VB", "F#" };
             var lengths = from name in names
                           select name.Length;
-            ConsoleUtilities.Print(lengths);
         }
     }
 }
